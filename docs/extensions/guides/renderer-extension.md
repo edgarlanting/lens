@@ -6,7 +6,7 @@ The renderer extension api is the interface to Lens' renderer process (Lens runs
 
 To create a renderer extension simply extend the `LensRendererExtension` class:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from "@k8slens/extensions";
 
 export default class ExampleExtensionMain extends LensRendererExtension {
@@ -20,15 +20,15 @@ export default class ExampleExtensionMain extends LensRendererExtension {
 }
 ```
 
-There are two methods that you can implement to facilitate running your custom code. `onActivate()` is called when your extension has been successfully enabled. By implementing `onActivate()` you can initiate your custom code. `onDeactivate()` is called when the extension is disabled (typically from the [Lens Extensions Page]()) and when implemented gives you a chance to clean up after your extension, if necessary. The example above simply logs messages when the extension is enabled and disabled. 
+There are two methods that you can implement to facilitate running your custom code. `onActivate()` is called when your extension has been successfully enabled. By implementing `onActivate()` you can initiate your custom code. `onDeactivate()` is called when the extension is disabled (typically from the [Lens Extensions Page]()) and when implemented gives you a chance to clean up after your extension, if necessary. The example above simply logs messages when the extension is enabled and disabled.
 
 ### `clusterPages`
 
-Cluster pages appear as part of the cluster dashboard. They are accessible from the side bar, and are shown in the menu list after *Custom Resources*. It is conventional to use a cluster page to show information or provide functionality pertaining to the active cluster, along with custom data and functionality your extension may have. However, it is not limited to the active cluster. Also, your extension can gain access to the Kubernetes resources in the active cluster in a straightforward manner using the [`clusterStore`](../stores#clusterstore). 
+Cluster pages appear as part of the cluster dashboard. They are accessible from the side bar, and are shown in the menu list after *Custom Resources*. It is conventional to use a cluster page to show information or provide functionality pertaining to the active cluster, along with custom data and functionality your extension may have. However, it is not limited to the active cluster. Also, your extension can gain access to the Kubernetes resources in the active cluster in a straightforward manner using the [`clusterStore`](../stores#clusterstore).
 
 The following example adds a cluster page definition to a `LensRendererExtension` subclass:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExampleIcon, ExamplePage } from "./page"
 import React from "react"
@@ -47,7 +47,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 Cluster pages are objects matching the `PageRegistration` interface. The `id` field identiifies the page, and at its simplest is just a string identifier, as shown in the example above. The 'id' field can also convey route path details, such as variable parameters provided to a page ([See example below]()). The `components` field matches the `PageComponents` interface for wich there is one field, `Page`.  `Page` is of type ` React.ComponentType<any>`, which gives you great flexibility in defining the appearance and behaviour of your page. For the example above `ExamplePage` can be defined in `page.tsx`:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from "@k8slens/extensions";
 import React from "react"
 
@@ -68,7 +68,7 @@ Note that the `ExamplePage` class defines a property named `extension`. This all
 
 The above example code shows how to create a cluster page but not how to make it available to the Lens user. Cluster pages are typically made available through a menu item in the cluster dashboard sidebar. Expanding on the above example a cluster page menu is added to the `ExampleExtension` definition:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExampleIcon, ExamplePage } from "./page"
 import React from "react"
@@ -97,7 +97,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 Cluster page menus are objects matching the `ClusterPageMenuRegistration` interface. They define the appearance of the cluster page menu item in the cluster dashboard sidebar and the behaviour when the cluster page menu item is activated (typically by a mouse click). The example above uses the `target` field to set the behaviour as a link to the cluster page with `id` of `"hello"`. This is done by setting `target`'s `pageId` field to `"hello"`. The cluster page menu item's appearance is defined by setting the `title` field to the text that is to be displayed in the cluster dashboard sidebar. The `components` field is used to set an icon that appears to the left of the `title` text in the sidebar. Thus when the `"Hello World"` menu item is activated the cluster dashboard will show the contents of `ExamplePage`. This example requires the definition of another React-based component, `ExampleIcon`, which has been added to `page.tsx`:
 
-``` typescript
+```tsx
 import { LensRendererExtension, Component } from "@k8slens/extensions";
 import React from "react"
 
@@ -120,7 +120,7 @@ export class ExamplePage extends React.Component<{ extension: LensRendererExtens
 
 A cluster page menu can also be used to define a foldout submenu in the cluster dashboard sidebar. This enables the grouping of cluster pages. The following example shows how to specify a submenu having two menu items:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExampleIcon, ExamplePage } from "./page"
 import React from "react"
@@ -134,7 +134,7 @@ export default class ExampleExtension extends LensRendererExtension {
       }
     },
     {
-      id: "bonjour", 
+      id: "bonjour",
       components: {
         Page: () => <ExemplePage extension={this}/>,
       }
@@ -173,11 +173,11 @@ The above defines two cluster pages and three cluster page menu objects. The clu
 
 ### `globalPages`
 
-Global pages appear independently of the cluster dashboard and they fill the Lens UI space. A global page is typically triggered from the cluster menu using a [global page menu](#globalpagemenus). They can also be triggered by a [custom app menu selection](../main-extension#appmenus) from a Main Extension or a [custom status bar item](#statusbaritems). Global pages can appear even when there is no active cluster, unlike cluster pages. It is conventional to use a global page to show information and provide functionality relevant across clusters, along with custom data and functionality that your extension may have. 
+Global pages appear independently of the cluster dashboard and they fill the Lens UI space. A global page is typically triggered from the cluster menu using a [global page menu](#globalpagemenus). They can also be triggered by a [custom app menu selection](../main-extension#appmenus) from a Main Extension or a [custom status bar item](#statusbaritems). Global pages can appear even when there is no active cluster, unlike cluster pages. It is conventional to use a global page to show information and provide functionality relevant across clusters, along with custom data and functionality that your extension may have.
 
 The following example defines a `LensRendererExtension` subclass with a single global page definition:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from '@k8slens/extensions';
 import { HelpPage } from './page';
 import React from 'react';
@@ -196,7 +196,7 @@ export default class HelpExtension extends LensRendererExtension {
 
 Global pages are objects matching the `PageRegistration` interface. The `id` field identiifies the page, and at its simplest is just a string identifier, as shown in the example above. The 'id' field can also convey route path details, such as variable parameters provided to a page ([See example below]()). The `components` field matches the `PageComponents` interface for which there is one field, `Page`.  `Page` is of type ` React.ComponentType<any>`, which gives you great flexibility in defining the appearance and behaviour of your page. For the example above `HelpPage` can be defined in `page.tsx`:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from "@k8slens/extensions";
 import React from "react"
 
@@ -211,7 +211,7 @@ export class HelpPage extends React.Component<{ extension: LensRendererExtension
 }
 ```
 
-Note that the `HelpPage` class defines a property named `extension`. This allows the `HelpExtension` object to be passed in React-style in the global page definition, so that `HelpPage` can access any `HelpExtension` subclass data. 
+Note that the `HelpPage` class defines a property named `extension`. This allows the `HelpExtension` object to be passed in React-style in the global page definition, so that `HelpPage` can access any `HelpExtension` subclass data.
 
 This example code shows how to create a global page but not how to make it available to the Lens user. Global pages are typically made available through a number of ways. Menu items can be added to the Lens app menu system and set to open a global page when activated (See [`appMenus` in the Main Extension guide](../main-extension#appmenus)). Interactive elements can be placed on the status bar (the blue strip along the bottom of the Lens UI) and can be configured to link to a global page when activated (See [`statusBarItems`](#statusbaritems)). As well, global pages can be made accessible from the cluster menu, which is the vertical strip along the left side of the Lens UI showing the available cluster icons, and the Add Cluster icon. Global page menu icons that are defined using [`globalPageMenus`](#globalpagemenus) appear below the Add Cluster icon.
 
@@ -219,7 +219,7 @@ This example code shows how to create a global page but not how to make it avail
 
 Global page menus connect a global page to the cluster menu, which is the vertical strip along the left side of the Lens UI showing the available cluster icons, and the Add Cluster icon. Expanding on the example from [`globalPages`](#globalPages) a global page menu is added to the `HelpExtension` definition:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from "@k8slens/extensions";
 import { HelpIcon, HelpPage } from "./page"
 import React from "react"
@@ -248,7 +248,7 @@ export default class HelpExtension extends LensRendererExtension {
 
 Global page menus are objects matching the `PageMenuRegistration` interface. They define the appearance of the global page menu item in the cluster menu and the behaviour when the global page menu item is activated (typically by a mouse click). The example above uses the `target` field to set the behaviour as a link to the global page with `id` of `"help"`. This is done by setting `target`'s `pageId` field to `"help"`. The global page menu item's appearance is defined by setting the `title` field to the text that is to be displayed as a tooltip in the cluster menu. The `components` field is used to set an icon that appears in the cluster menu. Thus when the `"Help"` icon is activated the contents of `ExamplePage` will be shown. This example requires the definition of another React-based component, `HelpIcon`, which has been added to `page.tsx`:
 
-``` typescript
+```tsx
 import { LensRendererExtension, Component } from "@k8slens/extensions";
 import React from "react"
 
@@ -267,14 +267,14 @@ export class HelpPage extends React.Component<{ extension: LensRendererExtension
 }
 ```
 
-`HelpIcon` introduces one of Lens' built-in components available to extension developers, the `Component.Icon`. Built in are the [Material Design](https://material.io) [icons](https://material.io/resources/icons/). One can be selected by name via the `material` field. 
+`HelpIcon` introduces one of Lens' built-in components available to extension developers, the `Component.Icon`. Built in are the [Material Design](https://material.io) [icons](https://material.io/resources/icons/). One can be selected by name via the `material` field.
 
 ### `clusterFeatures`
 
-Cluster features are Kubernetes resources that can be applied to and managed within the active cluster. They can be installed/uninstalled by the Lens user from the [cluster settings page](). 
+Cluster features are Kubernetes resources that can be applied to and managed within the active cluster. They can be installed/uninstalled by the Lens user from the [cluster settings page]().
 The following example shows how to add a cluster feature as part of a `LensRendererExtension`:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from "@k8slens/extensions"
 import { ExampleFeature } from "./src/example-feature"
 import React from "react"
@@ -299,7 +299,7 @@ export default class ExampleFeatureExtension extends LensRendererExtension {
 ```
 The `title` and `components.Description` fields provide content that appears on the cluster settings page, in the **Features** section. The `feature` field must specify an instance which extends the abstract class `ClusterFeature.Feature`, and specifically implement the following methods:
 
-``` typescript
+```tsx
   abstract install(cluster: Cluster): Promise<void>;
   abstract upgrade(cluster: Cluster): Promise<void>;
   abstract uninstall(cluster: Cluster): Promise<void>;
@@ -316,7 +316,7 @@ The `updateStatus()` method is called periodically by Lens to determine details 
 
 The following shows a very simple implementation of a `ClusterFeature`:
 
-``` typescript
+```tsx
 import { ClusterFeature, Store, K8sApi } from "@k8slens/extensions";
 import * as path from "path";
 
@@ -338,7 +338,7 @@ export class ExampleFeature extends ClusterFeature.Feature {
       if (examplePod?.kind) {
         this.status.installed = true;
         this.status.currentVersion = examplePod.spec.containers[0].image.split(":")[1];
-        this.status.canUpgrade = true;  // a real implementation would perform a check here that is relevant to the specific feature 
+        this.status.canUpgrade = true;  // a real implementation would perform a check here that is relevant to the specific feature
       } else {
         this.status.installed = false;
         this.status.canUpgrade = false;
@@ -377,13 +377,13 @@ The `upgrade()` method in the example above is implemented by simply invoking th
 
 The `uninstall()` method is implemented in the example above by utilizing the [`K8sApi`](tbd) provided by Lens to simply delete the `example-pod` pod applied by the `install()` method.
 
-The `updateStatus()` method is implemented above by using the [`K8sApi`](tbd) as well, this time to get information from the `example-pod` pod, in particular to determine if it is installed, what version is associated with it, and if it can be upgraded. How the status is updated for a specific cluster feature is up to the implementation. 
+The `updateStatus()` method is implemented above by using the [`K8sApi`](tbd) as well, this time to get information from the `example-pod` pod, in particular to determine if it is installed, what version is associated with it, and if it can be upgraded. How the status is updated for a specific cluster feature is up to the implementation.
 
 ### `appPreferences`
 
 The Preferences page is a built-in global page. Extensions can add custom preferences to the Preferences page, thus providing a single location for users to configure global options, for Lens and extensions alike. The following example demonstrates adding a custom preference:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from "@k8slens/extensions";
 import { ExamplePreference, ExamplePreferenceHint, ExamplePreferenceInput } from "./src/example-preference";
 import { observable } from "mobx";
@@ -407,7 +407,7 @@ export default class ExampleRendererExtension extends LensRendererExtension {
 
 App preferences are objects matching the `AppPreferenceRegistration` interface. The `title` field specifies the text to show as the heading on the Preferences page. The `components` field specifies two `React.Component` objects defining the interface for the preference. `Input` should specify an interactive input element for your preference and `Hint` should provide descriptive information for the preference, which is shown below the `Input` element. `ExamplePreferenceInput` expects its React props set to an `ExamplePreference` instance, which is how `ExampleRendererExtension` handles the state of the preference input. `ExampleRendererExtension` has the field `preference`, which is provided to `ExamplePreferenceInput` when it is created. In this example `ExamplePreferenceInput`, `ExamplePreferenceHint`, and `ExamplePreference` are defined in `./src/example-preference.tsx`:
 
-``` typescript
+```tsx
 import { Component } from "@k8slens/extensions";
 import { observer } from "mobx-react";
 import React from "react";
@@ -444,7 +444,7 @@ export class ExamplePreferenceHint extends React.Component {
 
 Note that the above example introduces decorators `observable` and `observer` from the [`mobx`](https://mobx.js.org/README.html) and [`mobx-react`](https://github.com/mobxjs/mobx-react#mobx-react) packages. `mobx` simplifies state management and without it this example would not visually update the checkbox properly when the user activates it. [Lens uses `mobx` extensively for state management](../working-with-mobx) of its own UI elements and it is recommended that extensions rely on it too. Alternatively, React's state management can be used instead, though `mobx` is typically simpler to use.
 
-Also note that an extension's state data can be managed using an `ExtensionStore` object, which conveniently handles persistence and synchronization. The example above defined an `ExamplePreference` type to hold the extension's state to simplify the code for this guide, but it is recommended to manage your extension's state data using [`ExtensionStore`](../stores#extensionstore) 
+Also note that an extension's state data can be managed using an `ExtensionStore` object, which conveniently handles persistence and synchronization. The example above defined an `ExamplePreference` type to hold the extension's state to simplify the code for this guide, but it is recommended to manage your extension's state data using [`ExtensionStore`](../stores#extensionstore)
 
 
 
@@ -460,7 +460,7 @@ The Status bar is the blue strip along the bottom of the Lens UI. Status bar ite
 
 The following example adds a status bar item definition, as well as a global page definition, to a `LensRendererExtension` subclass, and configures the status bar item to navigate to the global page upon a mouse click:
 
-``` typescript
+```tsx
 import { LensRendererExtension } from '@k8slens/extensions';
 import { HelpIcon, HelpPage } from "./page"
 import React from 'react';
@@ -477,15 +477,17 @@ export default class HelpExtension extends LensRendererExtension {
 
   statusBarItems = [
     {
-      item: (
-        <div
-          className="flex align-center gaps"
-          onClick={() => this.navigate("help")}
-        >
-          <HelpIcon />
-          My Status Bar Item
-        </div>
-      ),
+      components: {
+        Item: (
+          <div
+            className="flex align-center gaps"
+            onClick={() => this.navigate("help")}
+          >
+            <HelpIcon />
+            My Status Bar Item
+          </div>
+        )
+      },
     },
   ];
 }
@@ -495,7 +497,7 @@ export default class HelpExtension extends LensRendererExtension {
 
 An extension can add custom menu items (including actions) for specified Kubernetes resource kinds/apiVersions. These menu items appear under the `...` for each listed resource, and on the title bar of the details page for a specific resource.
 
-``` typescript
+```tsx
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions";
 import { CustomMenuItem, CustomMenuItemProps } from "./src/custom-menu-item"
@@ -518,7 +520,7 @@ export default class ExampleExtension extends LensRendererExtension {
 
 An extension can add custom details (content) for specified Kubernetes resource kinds/apiVersions. These custom details appear on the details page for a specific resource.
 
-``` typescript
+```tsx
 import React from "react"
 import { LensRendererExtension } from "@k8slens/extensions";
 import { CustomKindDetails, CustomKindDetailsProps } from "./src/custom-kind-details"
